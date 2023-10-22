@@ -7,10 +7,12 @@ public class ChangeShapes : MonoBehaviour
 {
 
     public Button changebt;
+    public Text count;
 
     public void ChangeShape()
     {
         GameEvents.RequestNewShapes();
-        changebt.enabled = false;  
+        changebt.enabled = false;
+        count.text = "0";
     }
 }
