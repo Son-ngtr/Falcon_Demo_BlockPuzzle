@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -50,13 +50,16 @@ public class Grid : MonoBehaviour
         currentActiveSquareColor_ = color;
     }
 
+    // Tạo bảng
+        // Tạo các ô vuông
+        // Thiết lập vị trí
     private void CreateGrid()
     {
         SpawnGridSquares();
         SetGridSquaresPositions();
-
     }
 
+    // Tạo các ô vuông trên bảng
     private void SpawnGridSquares()
     {
         int square_index = 0;
@@ -75,13 +78,17 @@ public class Grid : MonoBehaviour
         }
     }
 
+    // Thiết lập vị trí các ô vuông trên bảng
     private void SetGridSquaresPositions()
     {
+        // Biến lưu STT cột, hàng; số ô vuông trống giữa các ô trên bảng;
+        // Biến lưu trạng thái ô di chuyển hay chưa 
         int column_number = 0;
         int row_number = 0;
         Vector2 square_gap_number = new Vector2 (0.0f, 0.0f);
         bool row_moved = false;
 
+        // Hình chữ nhật đầu tiên trong bảng -> tính toán kich thước của ô vuông và kc giữa các ô vuông
         var square_rect = _gridSquares[0].GetComponent<RectTransform>();
 
         _offset.x = square_rect.rect.width * square_rect.transform.localScale.x + everySquareOffset;
@@ -92,7 +99,6 @@ public class Grid : MonoBehaviour
             if(column_number + 1 > columns)
             {
                 square_gap_number.x = 0;
-                // go to next colums
                 column_number = 0;
                 row_number++;
                 row_moved = false;
@@ -120,20 +126,24 @@ public class Grid : MonoBehaviour
         }
     }
 
+    // Biến và hàm lưu trạng thái chuyển đổi
     public bool change = false;
     public void CanChange()
     {
         change = true;
     }
 
+    // Kiểm tra hình dạng hiện tại có thể đặt trên bảng 9x9 hay không
     private void CheckIfShapeCanBePlaced()
     {
+        // Danh sách lưu chỉ số các ô vuông
         var squareIndexes = new List<int>();
 
         foreach (var square in _gridSquares)
         {
             var gridSquare = square.GetComponent<GridSquare>();
 
+            // Ô vuông được chọn và ko bị chiếm dụng
             if (gridSquare.Selected && !gridSquare.SquareOccupied)
             {
                 squareIndexes.Add(gridSquare.SquareIndex);
@@ -143,7 +153,7 @@ public class Grid : MonoBehaviour
         }
 
         var currentSelectedShape = shapeStorage.GetCurrentSelectedShape();
-        if (currentSelectedShape == null) return; // there no selected shape
+        if (currentSelectedShape == null) return; 
 
         if (currentSelectedShape.TotalSquareNumber == squareIndexes.Count)
         {
@@ -180,17 +190,18 @@ public class Grid : MonoBehaviour
         }
     }
 
+    // Kiểm tra có đường nào hoàn thiện không
     void CheckIfAnyLineIsCompleted()
     {
         List<int[]> lines = new List<int[]>();
 
-        // check col 9x1
+        // Kiểm tra cột 1x9
         foreach (var column in _lineIndicator.columnIndexes)
         {
             lines.Add(_lineIndicator.GetVerticalLine(column));
         }
 
-        // check row 1x9
+        // Kiểm tra dòng 9x1
         for (var row = 0; row < 9; row++)
         {
             List<int> data = new List<int>(9);
@@ -198,26 +209,11 @@ public class Grid : MonoBehaviour
             {
                 data.Add(_lineIndicator.line_data[row, index]);
             }
-
             lines.Add(data.ToArray());
         }
 
-        // Check square completed 3x3, we have 9 square with index in square_data
-        /*for (int square = 0; square < 9; square++)
-        {
-            List<int> data = new List<int>(9);
-            for (var index = 0; index < 9; index++)
-            {
-                data.Add(_lineIndicator.square_data[square, index]);
-            }
-
-            lines.Add(data.ToArray());
-        }*/
-
-        // return the number of the line completed
+        // Lấy số đường hoàn thiện dựa trên danh sách lines
         var completedLines = CheckIfSquareIsCompleted(lines);
-
- 
         
         if (completedLines >= 1)
         {
@@ -225,12 +221,13 @@ public class Grid : MonoBehaviour
             popupSound[0].Play();
         }
 
-        // add scores
+        // Điểm số
         var totalScores = 10 * completedLines;
         GameEvents.AddScores(totalScores);
         CheckIfPlayerLost();
     }
 
+    // Trả về số dòng hoàn thiện dựa trên số ô vuông hoàn thiện
     private int CheckIfSquareIsCompleted(List<int[]> data)
     {
         List<int[]> completedLines = new List<int[]>();
@@ -282,6 +279,7 @@ public class Grid : MonoBehaviour
         return linesCompleted;
     }
 
+    // Kiểm tra kết thúc trò chơi
     private void CheckIfPlayerLost()
     {
         var validShapes = 0;
@@ -299,22 +297,24 @@ public class Grid : MonoBehaviour
 
         if (validShapes == 0)
         {
-            // GameOver
             GameEvents.GameOver(false);
-            // Debug.Log("GAME OVER");
         }
     }
 
+    // Kiểm tra nếu hình có thể đặt lên bảng hay ko
     private bool CheckIfShapeCanBePlaceOnGrid(Shape currentShape)
     {
+        // Dữ liệu hình hiện tại, số cột, số hàng
         var currentShapeData = currentShape.CurrentShapeData;
         var shapeColumns = currentShapeData.columns;
         var shapeRows = currentShapeData.rows;
 
-        // List contain all indexes of filled up square
+        // Tạo danh sách lưu các chỉ số ô vuông đã được lấp đầy
         List<int> origincalShapeFillUpSquares = new List<int>();
         var squareIndex = 0;
 
+        // Duyệt các ô vuông của hình hiện tại và thêm các chỉ số ô vuông đã được ấp đầu vào danh sách
+        // Ví dụ: hình vuông 2x2 có ô 0,0 và 1,1 được lấp đầu -> trả về danh sách 0,3
         for (var rowIndex = 0; rowIndex < shapeRows; rowIndex++)
         {
             for (var columnIndex = 0; columnIndex < shapeColumns; columnIndex++)
@@ -333,13 +333,15 @@ public class Grid : MonoBehaviour
             Debug.LogError("Number of filled up squares are not the same as the original shape have.");
         }
 
+        // Lấy danh sách các ô vuông trên bảng có cùng kích thước hình hiện tại
+        // nếu shape là hình vuông 2x2 và bảng là 3x3 -> squareList: [0, 1, 2], [3, 4, 5], [6, 7, 8]
         var squareList = GetAllSquaresCombination(shapeColumns, shapeRows);
 
         bool canBePlaced = false;
 
         foreach (var number in squareList)
         {
-            // compare the same size of the array, the on from grid with the square array from shape
+            // Kiểm tra hình dạng hiện tại có thể được đặt trên ô vuông tại chỉ số number[squareIndexToCheck] hay ko
             bool shapeCanBePlacedOnTheBoard = true;
             foreach (var squareIndexToCheck in origincalShapeFillUpSquares)
             {
@@ -359,6 +361,8 @@ public class Grid : MonoBehaviour
         return canBePlaced;
     }
  
+    // Tạo danh sách các ô vuông
+    // Ví dụ nếu input = (3,3) -> tạo danh sách [[0,1,2], [4,5,6], ..., [24,25,26]]
     private List<int[]> GetAllSquaresCombination(int columns, int rows)
     {
         var squareList = new List<int[]>();
