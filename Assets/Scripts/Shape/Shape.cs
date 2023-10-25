@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,7 +9,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
 
     public GameObject squareShapeImage;
     public Vector3 shapeSelectedScale;
-    public Vector2 offset = new Vector2 (0f, 700f);
+    public Vector2 offset = new Vector2 (0f, 200f);
 
     [HideInInspector]
     public ShapeData CurrentShapeData;
@@ -19,21 +19,23 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     private List<GameObject> _currentShape = new List<GameObject>();
     private Vector3 _shapeStartScale;
     private RectTransform _transform;
-/*    private bool _shapeDraggable = true;
-*/    private Canvas _canvas;
+    // private bool _shapeDraggable = true;
+    private Canvas _canvas;
     private Vector3 _startPosition;
     private bool _shapeActive = true;
 
+    // Khởi tạo các thuộc tính: kích thước, RectTransform, canvas, vị trí, trạng thái hoạt động
     public void Awake()
     {
         _shapeStartScale = this.GetComponent<RectTransform>().localScale;
         _transform = this.GetComponent<RectTransform>();
         _canvas = GetComponentInParent<Canvas>();
-/*        _shapeDraggable = true;
-*/        _startPosition = transform.localPosition;
+        // _shapeDraggable = true;
+        _startPosition = transform.localPosition;
         _shapeActive = true;
     }
 
+    // Hàm gọi khi đối tượng được bật/ tắt. Trong đó sẽ đăng ký/ hủy đăng ký sự kiện
     private void OnEnable()
     {
         GameEvents.MoveShapeToStartPosition += MoveShapeToStartPosition;
@@ -45,14 +47,13 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         GameEvents.SetShapeInActive -= SetShapeInActive;
     }
 
-
-
-    // detect shape is removed or not
+    // Kiểm tra hình ở vị trí bắt đầu với vị trí hiện tại
     public bool IsOnStartPosition()
     {
         return _transform.localPosition == _startPosition;
     }
 
+    // Kiểm tra nếu bất kỳ ô vuông trong hình đang hoạt động
     public bool IsAnyOfShapeSquareActive()
     {
         foreach (var square in _currentShape)
@@ -66,18 +67,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         return false;
     }
 
-    public void DeactivateShape()
-    {
-        if(_shapeActive)
-        {
-            foreach (var square in _currentShape)
-            {
-                square?.GetComponent<ShapeSquare>().DeactivateShape();
-            }
-        }
-        _shapeActive = false;
-    }
-
+    // Hàm vô hiệu hóa hình nếu + hình ko ở vị trí bắt đầu + có ô vuông hoạt động
     private void SetShapeInActive()
     {
         if (IsOnStartPosition() == false && IsAnyOfShapeSquareActive())
@@ -89,6 +79,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         }
     }
 
+    // Kích hoạt hình 
     public void ActivateShape()
     {
         if (!_shapeActive)
@@ -102,26 +93,43 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         
     }
 
+    // Vô hiệu hóa hình
+    public void DeactivateShape()
+    {
+        if (_shapeActive)
+        {
+            foreach (var square in _currentShape)
+            {
+                square?.GetComponent<ShapeSquare>().DeactivateShape();
+            }
+        }
+        _shapeActive = false;
+    }
+
+    // Yêu cầu hình mới
     public void RequestNewShape(ShapeData shapeData)
     {
+        // Đặt vị trí hình về vị trí ban đầu
         _transform.localPosition = _startPosition;
         CreateShape(shapeData);
     }
 
+    // Tạo hình dạng mới dựa trên shapeData có sẵn
     public void CreateShape(ShapeData shapeData)
     {
         CurrentShapeData = shapeData;
         TotalSquareNumber = GetNumberOfSquares(shapeData);
 
+        // Kiểm tra danh sách hình có đủ để tạo hay không
         while (_currentShape.Count < TotalSquareNumber)
         {
-            // add image to List, potition to make instantiate
+            // Thêm hình vào danh sách, yêu cầu khởi tạo
             _currentShape.Add(Instantiate(squareShapeImage, transform) as GameObject);
         }
 
+        // Vô hiệu hóa các ô vuông hiện tại, đặt mọi thứ về 0
         foreach (var square in _currentShape)
         {
-            // make sure everything set to 0
             square.gameObject.transform.position = Vector3.zero;
             square.gameObject.SetActive(false);
         }
@@ -132,12 +140,12 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
 
         int currentIndexInList = 0;
 
-        // set position to form final Shape
+        // Đặt vị trí để tạo hình dạng cuối cùng
         for(var row = 0; row < shapeData.rows; row++)
         {
             for(var col = 0; col < shapeData.columns; col++)
             {
-                // if active square
+                // Kiêm tra hình hoạt động hay ko
                 if (shapeData.board[row].column[col])
                 {
                     _currentShape[currentIndexInList].SetActive(true);
@@ -151,6 +159,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         }
     }
 
+    // Tính toán vị trí Y của một ô vuông
     private float GetYPositionForShapeSquare(ShapeData shapeData, int row, Vector2 moveDistance)
     {
         float shiftOnY = 0f;
@@ -206,6 +215,12 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         return shiftOnY;
     }
 
+    // Tính toán vị trí X
+    // Kiểm tra hình có nhiều hơn 1 cột hay không
+        // Có -> Tính toán chỉ số của ô vuông trong hình
+    // Kiểm tra xem ô vuông hiện tại ở trước hay sau ô trung tâm
+        // Trước -> di chuyển ô vuông về bên trái
+        // Sau -> di chuyển ô vuông sang bên phải
     private float GetXPositionForShapeSquare(ShapeData shapeData, int column, Vector2 moveDistance)
     {
         float shiftOnX = 0f;
@@ -261,7 +276,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         return shiftOnX;
     }
 
-    // count active square
+    // Trả về số ô vuông hoạt động
     private int GetNumberOfSquares(ShapeData shapeData)
     {
         int number = 0;
@@ -279,7 +294,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     }
 
 
-    // handle when mouse click and drag, ... the shape to the board
+    // Xử lý sự kiện tương tác hình với bảng 9x9
     public void OnPointerClick(PointerEventData eventData)
     {
 
@@ -292,7 +307,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // execute when select shape and remove 
+        // Thực thi khi chọn hình hoặc bỏ
         this.GetComponent<RectTransform>().localScale = shapeSelectedScale;
     }
 
@@ -324,10 +339,4 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         _transform.transform.localPosition = _startPosition;
     }
 
-    public void ChangeShape()
-    {
-
-    }
-
- 
 }
