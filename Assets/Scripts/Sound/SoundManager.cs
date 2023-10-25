@@ -35,6 +35,7 @@ public class SoundManager : MonoBehaviour
         AudioListener.pause = muted;
     }
 
+    // C?p nh?t âm thanh và nút
     public void OnButtonPress()
     {
         if (muted == false)
@@ -76,7 +77,7 @@ public class SoundManager : MonoBehaviour
         PlayerPrefs.SetInt("muted", muted ? 1 : 0);
     }
 
-
+    // Ch?y âm thanh
     public void playThisSoundEffect()
     {
         if(popupSound != null)

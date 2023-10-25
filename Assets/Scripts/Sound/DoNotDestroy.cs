@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DoNotDestroy : MonoBehaviour
 {
+    // Hàm x? lý nh?c game
     private void Awake()
     {
         GameObject[] musicObj = GameObject.FindGameObjectsWithTag("GameMusic");
