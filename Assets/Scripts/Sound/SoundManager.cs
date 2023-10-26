@@ -11,7 +11,7 @@ public class SoundManager : MonoBehaviour
 
     public AudioSource[] popupSound;
 
-    private bool muted = false;
+    private bool _muted = false;
     void Start()
     {
         soundOnIcon.enabled = true;
@@ -32,20 +32,20 @@ public class SoundManager : MonoBehaviour
             Load();
         }
         UpdateButtonIcon();
-        AudioListener.pause = muted;
+        AudioListener.pause = _muted;
     }
 
     // Cập nhật âm thanh và nút
     public void OnButtonPress()
     {
-        if (muted == false)
+        if (_muted == false)
         {
-            muted = true;
+            _muted = true;
             AudioListener.pause = true;
         }
         else
         {
-            muted = false;
+            _muted = false;
             AudioListener.pause = false;
         }
 
@@ -55,7 +55,7 @@ public class SoundManager : MonoBehaviour
 
     private void UpdateButtonIcon()
     {
-        if (muted == false)
+        if (_muted == false)
         {
             soundOffIcon.enabled = false;
             soundOnIcon.enabled = true;
@@ -69,12 +69,12 @@ public class SoundManager : MonoBehaviour
 
     private void Load()
     {
-        muted = PlayerPrefs.GetInt("muted") == 1;
+        _muted = PlayerPrefs.GetInt("muted") == 1;
     }
 
     private void Save()
     {
-        PlayerPrefs.SetInt("muted", muted ? 1 : 0);
+        PlayerPrefs.SetInt("muted", _muted ? 1 : 0);
     }
 
     // Chạy âm thanh
