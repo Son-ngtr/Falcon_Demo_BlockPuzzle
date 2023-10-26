@@ -1,15 +1,16 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Quản lý các ô hình vuông: kích hoạt, hủy bỏ, cập nhật xung đột, xóa cập nhật xung đột
 public class ShapeSquare : MonoBehaviour
 {
     public Image occupiedImage;
 
     void Start()
     {
-         occupiedImage.gameObject.SetActive(false);
+        occupiedImage.gameObject.SetActive(false);
     }
 
     public void DeactivateShape()

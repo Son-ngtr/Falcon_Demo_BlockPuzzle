@@ -1,8 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Lớp cập nhật thanh điểm tối đa
 public class BestScorebar : MonoBehaviour
 {
     public Image fillInImage;
@@ -18,6 +19,7 @@ public class BestScorebar : MonoBehaviour
         GameEvents.UpdateBestScoreBar -= UpdateBestScoreBar;
     }
 
+    // Hàm cập nhật thanh điểm
     private void UpdateBestScoreBar(int currentScore, int bestScore)
     {
         float currentPercentage = (float)currentScore / (float)bestScore;

@@ -1,10 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DoNotDestroy : MonoBehaviour
 {
-    // H�m x? l� nh?c game
+    // Hàm xử lý nhạc game
     private void Awake()
     {
         GameObject[] musicObj = GameObject.FindGameObjectsWithTag("GameMusic");

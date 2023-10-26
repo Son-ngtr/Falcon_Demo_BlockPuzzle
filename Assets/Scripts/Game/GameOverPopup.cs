@@ -1,7 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Lớp thông báo sự kiện trò chơi
 public class GameOverPopup : MonoBehaviour
 {
     public GameObject gameOverPopup;

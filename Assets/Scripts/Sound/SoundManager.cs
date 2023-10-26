@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,7 +35,7 @@ public class SoundManager : MonoBehaviour
         AudioListener.pause = muted;
     }
 
-    // C?p nh?t �m thanh v� n�t
+    // Cập nhật âm thanh và nút
     public void OnButtonPress()
     {
         if (muted == false)
@@ -77,7 +77,7 @@ public class SoundManager : MonoBehaviour
         PlayerPrefs.SetInt("muted", muted ? 1 : 0);
     }
 
-    // Ch?y �m thanh
+    // Chạy âm thanh
     public void playThisSoundEffect()
     {
         if(popupSound != null)

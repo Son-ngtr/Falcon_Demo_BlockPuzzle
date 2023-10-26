@@ -6,6 +6,6 @@ public class WritingShape : MonoBehaviour
 {
     public void DeactivateWriting()
     {
-        gameObject.SetActive(false);
-    }
+/*        gameObject.SetActive(false);
+*/    }
 }

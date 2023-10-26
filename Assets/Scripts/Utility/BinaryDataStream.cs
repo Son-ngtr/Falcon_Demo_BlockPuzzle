@@ -1,12 +1,14 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 
+// Lưu và đọc dữ liệu nhị phân
 public class BinaryDataStream
 {
+    // Lưu dữ liệu nhị phân của đối tượng vào tệp fileName
     public static void Save<T>(T serializedObject, string fileName)
     {
         string path = Application.persistentDataPath + "/saves/";
@@ -26,6 +28,7 @@ public class BinaryDataStream
         finally { fileStream.Close(); }
     }
 
+    // Kiểm tra tệp tên "fileName" có tồn tại không
     public static bool Exist(string fileName)
     {
         string path = Application.persistentDataPath + "/saves/";
@@ -33,6 +36,7 @@ public class BinaryDataStream
         return File.Exists(path + fullFileName);
     }
 
+    // Độc dữ liệu từ tệp "fileName"
     public static T Read<T>(string fileName)
     {
         string path = Application.persistentDataPath + "/saves/";

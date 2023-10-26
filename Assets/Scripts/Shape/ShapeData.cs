@@ -1,13 +1,14 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
 [System.Serializable]
 
+// Lớp scriptable lưu dữ liệu hình dạng
 public class ShapeData : ScriptableObject
 {
-    // see row member
+    
     [System.Serializable]
     public class Row
     {

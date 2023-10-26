@@ -1,8 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// Lớp chứa các hàm xử lý màn hình menu
 public class MenuButton : MonoBehaviour
 {
     private void Awake()

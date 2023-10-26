@@ -1,10 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Quản lý hình ảnh ô vuông hiện hoạt
 public class ActiceSquareImageSelector : MonoBehaviour
-{
+{ 
     public SquareTextureData squareTextureData;
     public bool updateImageOnRechedTreshold = false;
 

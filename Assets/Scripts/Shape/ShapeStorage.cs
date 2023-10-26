@@ -1,9 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ShapeStorage : MonoBehaviour
 {
+    // Thuộc tính chưas
     public List<ShapeData> shapeData;
     public List<Shape> shapeList;
 
@@ -26,7 +27,7 @@ public class ShapeStorage : MonoBehaviour
         }
     }
 
-
+    // Trả về hình dạng đang được chọn
     public Shape GetCurrentSelectedShape()
     {
         foreach (var shape in shapeList)
@@ -41,6 +42,7 @@ public class ShapeStorage : MonoBehaviour
         return null;
     }
 
+    // Lấy một hình dạng trong danh sách
     private void RequestNewShapes()
     {
         foreach (var shape in shapeList)
