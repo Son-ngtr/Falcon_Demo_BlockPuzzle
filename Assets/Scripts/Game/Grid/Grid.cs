@@ -195,13 +195,11 @@ public class Grid : MonoBehaviour
     {
         List<int[]> lines = new List<int[]>();
 
-        // Kiểm tra cột 1x9
         foreach (var column in _lineIndicator.columnIndexes)
         {
             lines.Add(_lineIndicator.GetVerticalLine(column));
         }
 
-        // Kiểm tra dòng 9x1
         for (var row = 0; row < 9; row++)
         {
             List<int> data = new List<int>(9);
@@ -264,6 +262,7 @@ public class Grid : MonoBehaviour
                 completed = true;
             }
 
+            // Gỡ trạng thái chiếm đóng
             foreach (var squareIndex in line)
             {
                 var comp = _gridSquares[squareIndex].GetComponent<GridSquare>();
